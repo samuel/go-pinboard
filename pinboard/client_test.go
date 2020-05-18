@@ -17,7 +17,7 @@ func testClient(t *testing.T) *Client {
 
 func TestPostsUpdated(t *testing.T) {
 	c := testClient(t)
-	tm, err := c.PostsUpdated()
+	tm, err := c.PostsUpdated(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
