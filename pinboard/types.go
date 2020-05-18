@@ -49,7 +49,7 @@ type Post struct {
 	Description string    `json:"description"`
 	Extended    string    `json:"extended"` // HTML (sometimes escaped) description, generally <blockquote>
 	Hash        string    `json:"hash"`
-	Tags        Tags      `json:"tag"`
+	Tags        Tags      `json:"tags"`
 	Time        time.Time `json:"time"`
 	Meta        string    `json:"meta"`
 	Shared      Bool      `json:"shared"`
