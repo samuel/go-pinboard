@@ -13,10 +13,9 @@ type UpdateResponse struct {
 }
 
 type DatesResponse struct {
-	Tag        string               `xml:"tag,attr" json:"tag"`
-	User       string               `xml:"user,attr" json:"user"`
-	Dates      map[Date]json.Number `xml:"-" json:"dates"`
-	DateCounts []*DateCount         `xml:"date" json:"-"`
+	Tag   string               `json:"tag"`
+	User  string               `json:"user"`
+	Dates map[Date]json.Number `json:"dates"`
 }
 
 type Date struct {
@@ -30,15 +29,15 @@ func (d Date) String() string {
 }
 
 type DateCount struct {
-	Count int  `xml:"count,attr" json:"count"`
-	Date  Date `xml:"date,attr" json:"date"`
+	Count int  `json:"count"`
+	Date  Date `json:"date"`
 }
 
 type PostsResponse struct {
-	Date  time.Time `xml:"dt,attr" json:"date"`
-	Tag   string    `xml:"tag,attr" json:"tag"`
-	User  string    `xml:"user,attr" json:"user"`
-	Posts []*Post   `xml:"post" json:"posts"`
+	Date  time.Time `json:"date"`
+	Tag   string    `json:"tag"`
+	User  string    `json:"user"`
+	Posts []*Post   `son:"posts"`
 }
 
 type Bool bool
@@ -46,15 +45,15 @@ type Bool bool
 type Tags []string
 
 type Post struct {
-	Href        string    `xml:"href,attr" json:"href"`
-	Description string    `xml:"description,attr" json:"description"`
-	Extended    string    `xml:"extended,attr" json:"extended"` // HTML (sometimes escaped) description, generally <blockquote>
-	Hash        string    `xml:"hash,attr" json:"hash"`
-	Tags        Tags      `xml:"tag,attr" json:"tag"`
-	Time        time.Time `xml:"time,attr" json:"time"`
-	Meta        string    `xml:"meta,attr" json:"meta"`
-	Shared      Bool      `xml:"shared,attr" json:"shared"`
-	ToRead      Bool      `xml:"toread,attr" json:"toread"`
+	Href        string    `json:"href"`
+	Description string    `json:"description"`
+	Extended    string    `json:"extended"` // HTML (sometimes escaped) description, generally <blockquote>
+	Hash        string    `json:"hash"`
+	Tags        Tags      `json:"tag"`
+	Time        time.Time `json:"time"`
+	Meta        string    `json:"meta"`
+	Shared      Bool      `json:"shared"`
+	ToRead      Bool      `json:"toread"`
 }
 
 func (b *Bool) UnmarshalText(text []byte) error {

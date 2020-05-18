@@ -6,10 +6,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"strconv"
 	"time"
 )
@@ -62,8 +60,6 @@ func (c *Client) PostDates(ctx context.Context, tag string) (map[Date]int, error
 		dates[d] = int(c)
 	}
 	return dates, nil
-	// TODO: maybe handle XML response
-	//	return res.Dates, nil
 }
 
 // RecentPosts returns a list of the user's most recent posts, filtered by tag.
@@ -103,11 +99,11 @@ func (c *Client) AllPosts(ctx context.Context, tag string, start, results int, f
 	if meta {
 		params.Set("meta", "1")
 	}
-	var res PostsResponse
-	if err := c.get(ctx, "posts/all", params, &res); err != nil {
+	var posts []*Post
+	if err := c.get(ctx, "posts/all", params, &posts); err != nil {
 		return nil, err
 	}
-	return res.Posts, nil
+	return posts, nil
 }
 
 // DeletePost deletes a bookmark.
@@ -139,6 +135,6 @@ func (c *Client) get(ctx context.Context, path string, params url.Values, respon
 	if response == nil {
 		return nil
 	}
-	dec := json.NewDecoder(io.TeeReader(res.Body, os.Stdout))
+	dec := json.NewDecoder(res.Body)
 	return dec.Decode(response)
 }
