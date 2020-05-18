@@ -1,6 +1,7 @@
 package pinboard
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -8,13 +9,14 @@ import (
 )
 
 type UpdateResponse struct {
-	Time time.Time `xml:"time,attr" json:"time"`
+	Time time.Time `xml:"time,attr" json:"update_time"`
 }
 
 type DatesResponse struct {
-	Tag   string       `xml:"tag,attr" json:"tag"`
-	User  string       `xml:"user,attr" json:"user"`
-	Dates []*DateCount `xml:"date" json:"date"`
+	Tag        string               `xml:"tag,attr" json:"tag"`
+	User       string               `xml:"user,attr" json:"user"`
+	Dates      map[Date]json.Number `xml:"-" json:"dates"`
+	DateCounts []*DateCount         `xml:"date" json:"-"`
 }
 
 type Date struct {
@@ -23,13 +25,17 @@ type Date struct {
 	Day   int
 }
 
+func (d Date) String() string {
+	return fmt.Sprintf("%d-%02d-%02d", d.Year, d.Month, d.Day)
+}
+
 type DateCount struct {
 	Count int  `xml:"count,attr" json:"count"`
 	Date  Date `xml:"date,attr" json:"date"`
 }
 
 type PostsResponse struct {
-	Date  time.Time `xml:"dt,atttr" json:"date"`
+	Date  time.Time `xml:"dt,attr" json:"date"`
 	Tag   string    `xml:"tag,attr" json:"tag"`
 	User  string    `xml:"user,attr" json:"user"`
 	Posts []*Post   `xml:"post" json:"posts"`

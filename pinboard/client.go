@@ -6,8 +6,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"time"
 )
@@ -42,7 +44,7 @@ func (c *Client) PostsUpdated(ctx context.Context) (time.Time, error) {
 }
 
 // PostDates returns a list of dates with the number of posts at each date.
-func (c *Client) PostDates(ctx context.Context, tag string) ([]*DateCount, error) {
+func (c *Client) PostDates(ctx context.Context, tag string) (map[Date]int, error) {
 	params := url.Values{}
 	if tag != "" {
 		params.Set("tag", tag)
@@ -51,7 +53,17 @@ func (c *Client) PostDates(ctx context.Context, tag string) ([]*DateCount, error
 	if err := c.get(ctx, "posts/dates", params, &res); err != nil {
 		return nil, err
 	}
-	return res.Dates, nil
+	dates := make(map[Date]int, len(res.Dates))
+	for d, n := range res.Dates {
+		c, err := n.Int64()
+		if err != nil {
+			return nil, err
+		}
+		dates[d] = int(c)
+	}
+	return dates, nil
+	// TODO: maybe handle XML response
+	//	return res.Dates, nil
 }
 
 // RecentPosts returns a list of the user's most recent posts, filtered by tag.
@@ -127,6 +139,6 @@ func (c *Client) get(ctx context.Context, path string, params url.Values, respon
 	if response == nil {
 		return nil
 	}
-	dec := json.NewDecoder(res.Body)
+	dec := json.NewDecoder(io.TeeReader(res.Body, os.Stdout))
 	return dec.Decode(response)
 }

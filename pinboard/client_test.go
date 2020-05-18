@@ -30,11 +30,8 @@ func TestPostDates(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for i, d := range dates {
-		t.Logf("%+v", d)
-		if i > 2 {
-			break
-		}
+	for d, n := range dates {
+		t.Logf("%s: %d", d, n)
 	}
 }
 
